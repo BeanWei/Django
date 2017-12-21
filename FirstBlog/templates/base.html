@@ -1,0 +1,215 @@
+{% load staticfiles %}
+{% load blog_tags %}
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Bean's blog</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="{static 'blog/js/ie/html5shiv.js' %}"></script><![endif]-->
+		<link rel="stylesheet" href="{% static 'blog/css/main.css' %}" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="{static 'blog/css/ie9.css' %}" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="{static 'blog/css/ie8.css' %}" /><![endif]-->
+        <link rel="stylesheet" href="{% static 'blog/css/highlights/github.css' %}">
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<h1><a href="{% url 'blog:index' %}">Bean.Wei的个人博客</a></h1>
+						<nav class="links">
+							<ul>
+								<li><a href="{% url 'blog:artical' %}">文章</a></li>
+								<li><a href="{% url 'blog:source' %}">资源</a></li>
+								<li><a href="{% url 'blog:books' %}">书笺</a></li>
+								<li><a href="{% url 'blog:diary' %}">日记</a></li>
+								<li><a href="#">关于</a></li>
+							</ul>
+						</nav>
+						<nav class="main">
+							<ul>
+								<li class="search">
+									<a class="fa-search" href="#search">Search</a>
+                                    {% csrf_token %}
+									<form id="search" method="get" action="{% url 'blog:search' %}">
+										<input type="text" name="query" placeholder="Search" />
+									</form>
+								</li>
+								<li class="menu">
+									<a class="fa-bars" href="#menu">Menu</a>
+								</li>
+							</ul>
+						</nav>
+					</header>
+
+				<!-- Menu -->
+					<section id="menu">
+
+						<!-- Search -->
+							<section>
+								<form class="search" method="get" action="#">
+									<input type="text" name="query" placeholder="Search" />
+								</form>
+							</section>
+
+						<!-- Links -->
+							<section>
+								<ul class="links">
+									<li>
+										<a href="#">
+											<h3>Lorem ipsum</h3>
+											<p>Feugiat tempus veroeros dolor</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>Dolor sit amet</h3>
+											<p>Sed vitae justo condimentum</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>Feugiat veroeros</h3>
+											<p>Phasellus sed ultricies mi congue</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>Etiam sed consequat</h3>
+											<p>Porta lectus amet ultricies</p>
+										</a>
+									</li>
+								</ul>
+							</section>
+
+						<!-- Actions -->
+							<section>
+								<ul class="actions vertical">
+									<li><a href="/admin" class="button big fit">Write</a></li>
+								</ul>
+							</section>
+
+					</section>
+                    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" >企业网站模板</a></div>
+
+				<!-- Main -->
+					<div id="main">
+                        <article>
+                            {% block main %}
+                            {% endblock main %}
+                        </article>
+                        <div class="comment-area" id="comment-area">
+                            {% block toc %}
+                            {% endblock toc %}
+                        </div>
+                    </div>
+
+				<!-- Sidebar -->
+					<section id="sidebar">
+
+						<!-- Intro -->
+							<section id="intro">
+								<a href="#" class="logo"><img src="{% static 'blog/images/logo.jpg' %}" alt="" /></a>
+								<header>
+									<h2>Bean.Wei</h2>
+									<p>身体和灵魂一个都不能落下，我码故我在</p>
+								</header>
+							</section>
+
+						<!-- Mini Posts -->
+							<aside class="col-md-4">
+                <div class="widget widget-recent-posts">
+                    <h3 class="widget-title">最新文章</h3>
+                    {% get_recent_posts as recent_post_list %}
+                    <ul>
+                        {% for post in recent_post_list %}
+                        <li>
+                            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                        </li>
+                        {% empty %}
+                        暂无文章
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="widget widget-archives">
+                    <h3 class="widget-title">归档</h3>
+                    {% archives as date_list %}
+                    <ul>
+                        {% for date in date_list %}
+                        <li>
+                            <a href="{% url 'blog:archives' date.year date.month %}">
+                                {{ date.year }} 年 {{ date.month }} 月</a>
+                        </li>
+                        {% empty %}
+                        暂无归档
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="widget widget-category">
+                    <h3 class="widget-title">分类</h3>
+                    {% get_categories as category_list %}
+                    <ul>
+                        {% for category in category_list %}
+                        <li>
+                            <a href="{% url 'blog:category' category.pk %}">{{ category.name }} <span class="post-count">({{ category.num_posts }})</span></a>
+                        </li>
+                        {% empty %}
+                        暂无分类
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="widget widget-tag-cloud">
+                    <h3 class="widget-title">标签云</h3>
+                    {% get_tags as tags_list %}
+                    <ul>
+                        {% for tags in tags_list %}
+                        <li>
+                            <a href="{% url 'blog:tags' tags.pk %}">{{ tags.name }}</a>
+                        </li>
+                        {% empty %}
+                        暂无标签
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="rss">
+                    <a href=""><span class="ion-social-rss-outline"></span> RSS 订阅</a>
+                </div>
+            </aside>
+        <!-- About -->
+            <section class="blurb">
+                <h2>About</h2>
+                <p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod amet placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at phasellus sed ultricies.</p>
+                <ul class="actions">
+                    <li><a href="#" class="button">Learn More</a></li>
+                </ul>
+            </section>
+
+        <!-- Footer -->
+            <section id="footer">
+                <ul class="icons">
+                    <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+                    <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+                    <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
+                    <li><a href="#" class="fa-rss"><span class="label">RSS</span></a></li>
+                    <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
+                </ul>
+                <p class="copyright">&copy; Untitled. More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>.</p>
+            </section>
+
+    </section>
+
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'blog/js/jquery.min.js' %}"></script>
+<script src="{% static 'blog/js/skel.min.js' %}"></script>
+<script src="{% static 'blog/js/util.js' %}"></script>
+<!--[if lte IE 8]><script src="{% static 'blog/js/ie/respond.min.js' %}"></script><![endif]-->
+<script src="{% static 'blog/js/main.js' %}"></script>
+    </body>
+</html>

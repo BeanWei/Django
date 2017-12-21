@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+<!-- Post -->
+{% block main %}
+    {% if error_msg %}
+        <p>{{ error_msg }}</p>
+    {% endif %}
+    {% for post in post_list %}
+    <article class="post">
+        <header>
+        <div class="title">
+            <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+            <a href="#">分类：</a><a href="#">{{ post.category.name }}</a><br/>
+            <a href="##">标签：</a><a href="###">{{ post.tags.name }}</a>
+        </div>
+        <div class="meta">
+            <time class="published" datetime="{{ post.created_time }}">{{ post.created_time }}</time>
+            <a href="#" class="author"><span class="name">{{ post.author }}</span><img src="{% static 'blog/images/logo.jpg' %}" alt="" /></a>
+        </div>
+        </header>
+        <!--
+        <a href="#" class="image featured"><img src="{% static 'blog/images/pic07.jpg' %}" alt="" /></a>
+        -->
+        <p>{{ post.excerpt }}</p>
+        <footer>
+        <ul class="actions">
+            <li><a href="{{ post.get_absolute_url }}" class="button big">继续阅读</a></li>
+        </ul>
+        <ul class="stats">
+            <li><a href="#">分享</a></li>
+            <li><a href="#" class="icon fa-heart">{{ post.views}}</a></li>
+            <li><a href="#" class="icon fa-comment">{{ post.comment_set.count }}</a></li>
+        </ul>
+        </footer>
+    </article>
+    {% empty %}
+        <div class="no post">暂时没有发布的文章</div>
+    {% endfor %}
+    <!-- Pagination -->
+    <ul class="actions pagination">
+        {% if post_list.has_previous %}
+            <li><a href="?page={{ post_list.previous_page_number }}" class=" button big previous">Previous Page</a></li>
+        {% endif %}
+        <span class="current">
+            Page{{ post_list.number }} of {{ post_list.paginator.num_pages }}.
+        </span>
+        {% if post_list.has_next %}
+            <li><a href="?page={{ post_list.next_page_number }}" class="button big next">Next Page</a></li>
+        {% endif %}
+    </ul>
+{% endblock main %}
+
